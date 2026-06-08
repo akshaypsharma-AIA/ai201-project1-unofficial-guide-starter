@@ -14,6 +14,12 @@
      Example: "Student reviews of CS professors at [university] — useful because official
      course descriptions don't reflect teaching style, exam difficulty, or workload." -->
 
+Student reviews of CS professors at the University of Toronto (UofT). 
+This knowledge is valuable because official university channels only provide 
+formal course descriptions and instructor bios — they don't capture real student 
+experiences like teaching quality, exam difficulty, office hour availability, or 
+which professors to avoid. Students rely on informal sources like Reddit and Rate 
+My Professors to make course selection decisions.
 ---
 
 ## Document Sources
@@ -24,17 +30,27 @@
 
 | # | Source | Type | URL or file path |
 |---|--------|------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
-
+| 1 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/1694041 |
+| 2 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/3121445 |
+| 3 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/2340488 |
+| 4 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/20260 |
+| 5 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/1443534 |
+| 6 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/3118690 |
+| 7 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/2127391 |
+| 8 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/30803 |
+| 9 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/30200 |
+| 10 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/69474 |
+| 11 | Rate My Professors | Web page | https://www.ratemyprofessors.com/professor/3042719 |
+| 12 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/n7h98q |
+| 13 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/1tirtnu |
+| 14 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/1ouc9zd |
+| 15 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/11qau12 |
+| 16 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/1kjq8ji |
+| 17 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/2u8ral |
+| 18 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/7kelyu |
+| 19 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/4rdqw7 |
+| 20 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/1ed0ww |
+| 21 | Reddit r/UofT | Forum thread | https://www.reddit.com/r/UofT/comments/1e0xd39 |
 ---
 
 ## Chunking Strategy
@@ -46,13 +62,31 @@
      - Any preprocessing you did before chunking (e.g., stripping HTML, removing headers)
      - What your final chunk count was across all documents -->
 
-**Chunk size:**
+**Chunk size:**Two strategies used based on source type:
+- RMP reviews: chunked by individual review (split on double newline) — each review 
+  is already self-contained, averaging 50–150 characters
+- Reddit threads: 500 characters with sentence-boundary detection (split at last 
+  period or newline within the chunk)
 
-**Overlap:**
 
-**Why these choices fit your documents:**
+**Overlap:**50 characters applied to Reddit chunks only. RMP reviews are 
+self-contained so overlap is not needed.
 
-**Final chunk count:**
+**Why these choices fit your documents:
+RMP reviews are short, independent opinions with one review per professor per student. 
+Splitting by review preserves each complete opinion as a single retrievable unit. 
+Breaking them by character would split mid-opinion and lose meaning.
+
+Reddit threads are longer and conversational. Character-based chunking with overlap 
+prevents mid-sentence splits. Critically, every Reddit comment chunk has the thread 
+title and first 200 characters of the original post prepended, this solves the 
+orphaned chunk problem where replies like "yeah she's great" have no context about 
+which professor is being discussed without the thread header.
+
+Chunk size of 500 characters (~125 tokens) fits comfortably within all-MiniLM-L6-v2's 
+256 token limit, avoiding silent truncation.
+
+**Final chunk count:**205 chunks total (167 Reddit + 38 RMP)
 
 ---
 
@@ -64,10 +98,37 @@
      Consider: context length limits, multilingual support, accuracy on domain-specific text,
      latency, and local vs. API-hosted. -->
 
-**Model used:**
+**Model used:**all-MiniLM-L6-v2 via sentence-transformers (local, free, no API key required)
 
 **Production tradeoff reflection:**
+all-MiniLM-L6-v2 is fast, free and runs locally — ideal for a student project. 
+In production I would weigh four tradeoffs:
 
+1. Domain specificity — a model trained on or fine-tuned for academic text would 
+   likely place terms like "explains well" and "great lecturer" closer in vector 
+   space than a general purpose model. Worth evaluating text-embedding-3-large 
+   (OpenAI) for higher baseline accuracy, or instructor-xl which can be prompted 
+   at inference time to approximate domain-specific embedding without retraining.
+
+2. Multilingual support — UofT has a large international student population who 
+   may write in mixed English/Mandarin or other languages. all-MiniLM handles 
+   this poorly. A multilingual model like multilingual-e5-large would be worth 
+   considering — it handles English just as well as monolingual models while 
+   also supporting other languages in a single vector space.
+
+3. Context length — all-MiniLM has a 256 token limit per chunk. At 500 characters 
+   (~125 tokens) current chunks fit comfortably. However if chunking strategy 
+   changes to larger chunks beyond ~1000 characters, truncation becomes a risk 
+   and a model with longer context like text-embedding-3-large (8191 tokens) 
+   would be necessary.
+
+4. Latency vs accuracy — all-MiniLM is extremely fast but sacrifices some accuracy. 
+   For a real-time student-facing app, that tradeoff is acceptable. For a high-stakes 
+   system, a larger slower model would be worth the latency cost.
+
+Fine-tuning the LLM itself is not warranted here — RAG provides the domain knowledge 
+and the base model behaviour is sufficient for generating helpful answers from 
+retrieved chunks.
 ---
 
 ## Grounded Generation
@@ -80,9 +141,38 @@
      the mechanism. -->
 
 **System prompt grounding instruction:**
+You are an assistant bot that helps University of Toronto students 
+find information about CS professors based on real student reviews.
+
+Answer ONLY using the context provided below. Do not use any outside knowledge.
+If the context does not contain enough information to answer the question, say:
+"I don't have enough information in my sources to answer that question."
+
+Always mention which professor you are referring to by name.
+Keep answers concise and grounded in what students actually said.
+
+Always provide source name as reference followed by text answer on the next line. 
+Structure outputs as follows
+Example:
+[Source: Reddit1.txt]
+Text Answer here. 
+
 
 **How source attribution is surfaced in the response:**
+Retrieved chunks are formatted with a source label before being passed to the 
+model:
 
+    --- Source 1 (rmp_2.txt) ---
+    Marina is one of the nicest profs I've ever had...
+
+    --- Source 2 (redit7.txt) ---
+    Thread: Best profs for CSC148...
+
+The model is instructed to answer only from this labelled context. The Groq 
+Llama 3.1 model naturally references source numbers and professor names in its 
+answers because they appear explicitly in the formatted context. Low-relevance 
+chunks are implicitly filtered by the top-k=5 retrieval — only the 5 most 
+semantically similar chunks reach the model, reducing noise.
 ---
 
 ## Evaluation Report
@@ -93,11 +183,11 @@
 
 | # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
 |---|----------|-----------------|------------------------------|-------------------|-------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
+| 1 | Who is the best professor for first year CS at UofT? | Paul Gries, Danny Heap, Diane Horton mentioned positively | Listed 6 professors with specific course recommendations and student quotes | Relevant | Accurate |
+| 2 | What do students say about Paul Gries? | Mixed reviews — mostly positive, some critical | Surfaced both positive and negative reviews with source attribution | Relevant | Accurate |
+| 3 | Who should I take for CSC148? | Danny Heap, Paul Gries, Diane Horton, David Liu | Listed correct professors but also showed raw chunk text in answer — generation partially leaked context | Partially relevant | Partially accurate |
+| 4 | Which professors should I avoid and why? | CSC401 teaching team described as incompetent | "I don't have enough information" — retrieval failure, wrong chunks returned | Off-target | Inaccurate |
+| 5 | What is the best dining hall at UofT? | Should say no information available | Correctly said "I don't have enough information" — grounding worked | Off-target (expected) | Accurate |
 
 **Retrieval quality:** Relevant / Partially relevant / Off-target  
 **Response accuracy:** Accurate / Partially accurate / Inaccurate
