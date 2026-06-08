@@ -1,0 +1,29 @@
+Domain: Student reviews of CS professors at University of Toronto
+
+Source 1: Rate My Professors (11 links)
+
+https://www.ratemyprofessors.com/professor/1694041
+https://www.ratemyprofessors.com/professor/3121445
+https://www.ratemyprofessors.com/professor/2340488
+https://www.ratemyprofessors.com/professor/20260
+https://www.ratemyprofessors.com/professor/1443534
+https://www.ratemyprofessors.com/professor/3118690
+https://www.ratemyprofessors.com/professor/2127391
+https://www.ratemyprofessors.com/professor/30803
+https://www.ratemyprofessors.com/professor/30200
+https://www.ratemyprofessors.com/professor/69474
+https://www.ratemyprofessors.com/professor/3042719
+Source 2: Reddit r/UofT (10 links)
+
+https://www.reddit.com/r/UofT/comments/n7h98q/help_others_by_submitting_a_review_for_all_your/
+https://www.reddit.com/r/UofT/comments/1tirtnu/any_suggestions_on_what_csc_300400_level_courses/
+https://www.reddit.com/r/UofT/comments/1ouc9zd/finding_professors_to_work_with_for_graduate/
+https://www.reddit.com/r/UofT/comments/11qau12/avoid_csc401_im_even_not_kidding/
+https://www.reddit.com/r/UofT/comments/1kjq8ji/rating_and_reviewing_every_course_i_took_at_uoft/
+https://www.reddit.com/r/UofT/comments/2u8ral/u_of_t_redditors_whos_the_best_instructor_you_had/
+https://www.reddit.com/r/UofT/comments/7kelyu/best_profs_for_csc148165/
+https://www.reddit.com/r/UofT/comments/4rdqw7/utsc_cs_1st_year_who_are_the_best_professors/
+https://www.reddit.com/r/UofT/comments/1ed0ww/comp_sci_first_year_at_utsg_best_profs_best/
+https://www.reddit.com/r/UofT/comments/1e0xd39/what_professors_are_the_best_at_utsg_for_math_and/
+
+Total: 21 sources
