@@ -1,0 +1,9 @@
+Lectures are uninteresting since he talks a lot, and he doesn't cover the content efficiently. He's a nice guy, but I don't recommend him as a professor. I took the course with him in Fall 2025, where he made the exam a lot more difficult than the previous time he coordinated. Also, he didn't provide a syllabus file, so we had to reference Quercus.
+
+Lectures are laid back and mostly cover a variety of algorithm examples. If you understand them quickly or have prior knowledge, most topics come fairly easy. Problem sets are quite difficult but graded leniently. Exams are fair and do not expect too much. Nikolov is a great instructor that you can tell is very passionate about theory.
+
+373 this term is much easier compared to previous years', and I don't know why there are still a bunch of people complaining about tests. Term tests were extremely fair and reasonable, and Nikolov curved the tests for questions that only tested us on the fundamentals, while those students are still not satisfied. I guess they should just quit CS.
+
+I'd like to ask those people who claimed they prepared so much for exams: why can't you execute Ford-Fulkerson? That's brainless execution questions, not even an algorithm one per se. Why can't you write something that's an LP based on definition? All are basics! Nikolov cares so much about his students even upon requests that just make no sense
+
+Very harsh at grading and extremely tough tests and expect to get low marks no matter how much you prepared. Amazing lecturer though.

@@ -175,6 +175,106 @@ Fine-tuning is not warranted here - RAG provides domain knowledge.
 | 5 |"where can post about a lost dog?" |"Sorry, I do not have the answer" |
 
 ---
+(venv) PS C:\Users\aksha\ai201-project1-unofficial-guide-starter> python app.py
+==================================================
+UofT CS Professor Review Bot
+Ask me anything about CS professors at UofT
+Type 'quit' to exit
+==================================================
+
+Your question: Who is the best professor for first year CS at UofT?
+
+Question: Who is the best professor for first year CS at UofT?
+Retrieving relevant chunks...
+Retrieved 5 chunks from: {'redit1.txt', 'redit8.txt', 'redit11.txt'}
+
+Generating answer...
+
+Answer:
+Based on the student reviews, the best professors for first year CS at UofT are:
+
+- Paul Gries 
+- Danny Heap 
+- Diane Horton 
+- David Liu 
+
+[Source: Reddit1.txt]
+for csc148, david liu, danny heap, and diane horton are all very good.
+
+[Source: Reddit3.txt]
+u, danny heap, and diane horton are all very good. i've had all 3 of them as profs before.
+
+[Source: Reddit3.txt]
+for csc165, danny is also great.
+
+Your question: What do students say about Paul Gries?
+
+Question: What do students say about Paul Gries?
+Retrieving relevant chunks...
+Retrieved 5 chunks from: {'rmp_6.txt', 'redit6.txt', 'rmp_8.txt'}
+
+Generating answer...
+
+Answer:
+[Source: rmp_8.txt]
+Gries is the embodiment of professors who put on a show to get a good review, and are neither kind nor knowledgeable when probed below the surface.
+
+[Source: rmp_8.txt]
+Professor Gries gave very clear and well-structured lectures that made learning Python easy and enjoyable. The course was thoughtfully designed, the test questions were fair, and the grading was fair.
+
+[Source: rmp_6.txt]
+He prepares his own detailed slides every class, can explain everything clearly, and is a very kind person.
+
+[Source: redit6.txt]
+He is knowledgeable, has no ego, takes every question seriously, and tells great stories that solidify concepts.
+
+Your question: Which professors should I avoid and why?
+
+Question: Which professors should I avoid and why?
+Retrieving relevant chunks...
+Retrieved 5 chunks from: {'redit2.txt', 'redit9.txt', 'rmp_2.txt', 'redit11.txt'}
+
+Generating answer...
+
+Answer:
+I don't have enough information in my sources to answer that question.
+
+Your question: Who should I take for CSC148?
+
+Question: Who should I take for CSC148?
+Retrieving relevant chunks...
+Retrieved 5 chunks from: {'redit1.txt', 'redit8.txt', 'redit3.txt'}
+
+Generating answer...
+
+Answer:
+For CSC148, you have two options: 
+Arnamoy Bhatacharyya (Source: reddit1.txt) and 
+Danny Heap, Paul Gries, Francois Pitt (Source: reddit1.txt and reddit2.txt)
+
+Your question: avoid CSC401 professor
+
+Question: avoid CSC401 professor
+Retrieving relevant chunks...
+Retrieved 5 chunks from: {'redit5.txt', 'redit8.txt', 'redit6.txt', 'redit1.txt', 'rmp_4.txt'}
+
+Generating answer...
+
+Answer:
+The teaching team for CSC401 is incompetent, according to a student review. They mention issues with broken tests, unexplained deductions, and a lack of response from the teaching team. 
+
+[Source: Source 3 (redit5.txt)]
+This year’s teaching team is just plainly incompetent. The broken Markus tests, the unexplained heavy deductions on assignments, the extremely opaque evaluation scheme, and the laughable lack of response from the teaching team to address any of the issues mentioned above.
+
+Your question: 
+
+#Failure Case Analysis
+Testing confirmed retrieval failure on the first phrasing, correct answer on the second. The embedding model couldn't connect "which professors should I avoid" to the CSC401 content, but "avoid CSC401 professor" matched directly.
+The problem is retrieval in the query "which professors should I avoid" didn't retrieve the right chunks. The word "avoid" in the query didn't match closely enough to the chunks in that thread.
+
+
+
+
 
 ## Anticipated Challenges
 

@@ -1,0 +1,11 @@
+Messy lecture slides, and doesn't record any lectures.
+
+He knows a lot, is easy to talk to, and I really enjoyed his lectures. However, his TAs were insanely brutal in their marking (as per Gerald's instructions), relying too blindly on the autotesting and never on the implementation attempt. Also, mandatory attendance with Tcard scanning is a bit strange.
+
+Asked him for reference letters for 4 programs, he agreed but only submitted 1 for UofT. Did not reply to any of my follow up emails.
+CSC485: 10% participation mark. You have to scan your tcard AND answer the in class quiz correctly.
+Lecture not related to assignments. The assignments are long but self explanatory, go to tutorials if you need help.
+
+Amazing professor, very knowledgeable in the field of NLP. His lecture truly opens up my eyes in NLP and vastly expand my understanding both within and outside of AI. They might be difficult but if you go to office hours he will explain in detail and expand on them. The final exam are SO EASY if you just go over the slides 2 ~3 times.
+
+If you are interested in NLP, avoid this course and go watch three videos on transformers, NMT, and ASR. It saves you a huge amount of time and may give you a better understanding. The objective of this course is to make an A student a B- grade.
