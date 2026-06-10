@@ -208,13 +208,23 @@ semantically similar chunks reach the model, reducing noise.
      results from an unrelated review" is an explanation. -->
 
 **Question that failed:**
-
+Which professors should I avoid and why?
 **What the system returned:**
-
+I don't have enough information in my sources to answer that question.
 **Root cause (tied to a specific pipeline stage):**
+This is a retrieval failure at Stage 4. The query uses abstract intent-based language — "avoid" — which did not embed close enough in vector space to the relevant chunks in redit5.txt, a Reddit thread titled "Avoid CSC401 — I'm not even kidding." The embedding model all-MiniLM-L6-v2 is general purpose and did not learn that "avoid" in the context of professor selection maps to complaint vocabulary like "incompetent", "broken tests", and "unexplained deductions". Instead it retrieved chunks about general course recommendations which contained no negative opinions, leaving the model with no basis to answer.
 
+This was confirmed by rephrasing the query to "avoid CSC401 professor" — the system immediately retrieved the correct chunks from redit5.txt and returned a specific, accurate answer about the CSC401 teaching team, citing broken tests, unexplained heavy deductions on assignments, and a lack of response from staff.
+
+The root cause is that all-MiniLM-L6-v2 matches on surface vocabulary, not user intent. The chunks existed — the retriever just could not connect abstract intent to domain-specific complaint language.
 **What you would change to fix it:**
+Three fixes in order of implementation effort:
 
+1. Query expansion — before embedding the query, use the LLM to rewrite it into multiple phrasings: "professors to avoid", "bad professors at UofT", "CSC courses with poor teaching." Retrieve against all variants and merge results. This costs one extra LLM call but significantly improves recall on intent-based queries.
+
+2. Domain-specific embedding — instructor-xl accepts an instruction string at inference time such as "Represent a student question about professor quality at UofT." This steers the vector space toward academic review vocabulary without any retraining, placing "avoid" closer to "incompetent" and "broken tests."
+
+3. Fine-tune the embedding model — build labelled training pairs marking similar intent: ("avoid this prof" ↔ "incompetent teaching team" = similar). Retrain the embedding model on these pairs so it learns domain-specific semantic relationships. Highest effort but most accurate long-term fix.
 ---
 
 ## Spec Reflection
