@@ -58,7 +58,7 @@ def ask(query):
     print("\nGenerating answer...")
     answer = generate_answer(query, chunks)
     print(f"\nAnswer:\n{answer}")
-    return answer
+    return {"answer": answer, "sources": [c['source'] for c in chunks]}
 
 if __name__ == "__main__":
     ask("Who is the best professor for first year CS at UofT?")
