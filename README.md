@@ -224,7 +224,12 @@ semantically similar chunks reach the model, reducing noise.
 
 **One way the spec helped you during implementation:**
 
+Planning the chunking strategy upfront in planning.md made a real difference when it came to writing chunk.py. Because I had already thought through the difference between RMP reviews and Reddit threads before touching any code, I naturally ended up with two separate functions — chunk_by_review for RMP and chunk_by_character for Reddit. The spec also pushed me to think about the orphaned chunk problem early, which led to the decision to prepend the thread title and first 200 characters of the original post to every Reddit comment chunk. That detail would probably have been missed if I had just started coding without planning.
+
+
 **One way your implementation diverged from the spec, and why:**
+
+The divergence was Reddit scraping. The specs assumed automated scraping via requests or PRAW, but Reddit now blocks unauthorized request entirely and getting developer API access requires account approval that takes days. The work around for me was manually downloading the JSON for each thread directly from the browser, which got the same data but required more manual effort than planned. 
 
 ---
 
@@ -241,12 +246,38 @@ semantically similar chunks reach the model, reducing noise.
 
 **Instance 1**
 
-- *What I gave the AI:*
+- *What I gave the AI:* 
+
+My planning.md chunking strategy section describing 
+  500 character chunks with 50 character overlap, and the observation that 
+  RMP reviews are short and self-contained while Reddit threads are long 
+  and conversational.
+
 - *What it produced:*
+
+A chunk.py with two separate functions — chunk_by_character 
+  for Reddit and chunk_by_review for RMP — plus a parse_reddit_json function 
+  that extracts thread title, original post and comments from raw JSON, 
+  prepending the thread title and first 200 characters of the original post 
+  to every comment chunk.
+
 - *What I changed or overrode:*
+
+The initial version only prepended the thread 
+  title to comments. I directed the AI to also include the first 200 characters 
+  of the original post body after understanding that replies without the original 
+  question context become orphaned chunks with no retrievable meaning.
 
 **Instance 2**
 
 - *What I gave the AI:*
+
+The retrieval failure observed during evaluation, the query "which professors should I avoid and why?" returned no useful answer despite the corpus containing a relevant thread about CSC401. I described that rephrasing to "avoid CSC401 professor" returned the correct answer immediately.
+
 - *What it produced:*
+
+A detailed root cause analysis identifying this as a Stage 4 retrieval failure — the general purpose all-MiniLM-L6-v2 embedding model did not place abstract intent-based vocabulary like "avoid" close enough in vector space to complaint-specific vocabulary like "incompetent", "broken tests" and "unexplained deductions
+
 - *What I changed or overrode:*
+
+I added three specific fixes in order of implementation effort — query expansion via LLM rewriting, instructor-xl with domain-specific prompting, and full embedding model fine-tuning on labelled pairs. I chose not to implement any of them given the deadline but documented them as production improvements.
